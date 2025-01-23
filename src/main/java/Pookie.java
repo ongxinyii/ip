@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Pookie {
     public static void main(String[] args) {
@@ -9,21 +10,32 @@ public class Pookie {
         System.out.println("____________________________________________________________");
 
         String input;
+        ArrayList<String> tasks = new ArrayList<>();
 
-        do {
+        while (true) {
             input = sc.nextLine();
 
-            if (!input.equals("bye")) {
-                System.out.println("____________________________________________________________");
-                System.out.println(input);
-                System.out.println("____________________________________________________________");
-            } else {
+            if (input.equals("bye")) {
                 System.out.println("____________________________________________________________");
                 System.out.println("Bye. ദ്ദി(˵ •̀ ᴗ - ˵ ) ✧\nHope to see you soon!");
                 System.out.println("____________________________________________________________");
+                break;
+            } else if (input.equals("list")) {
+                System.out.println("____________________________________________________________");
+                if (!tasks.isEmpty()) {
+                    for (int i = 0; i < tasks.size(); i++) {
+                        System.out.println(" ~~ " + (i + 1) + ". " + tasks.get(i) + " ~~ ");
+                    }
+                } else {
+                    System.out.println("No tasks added yet.");
+                }
+            } else {
+                tasks.add(input);
+                System.out.println("____________________________________________________________");
+                System.out.println(" added: " + input);
+                System.out.println("____________________________________________________________");
             }
-        } while (!input.equals("bye"));
-
+        }
         sc.close();
     }
 }
