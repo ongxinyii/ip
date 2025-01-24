@@ -28,7 +28,9 @@ public class Pookie {
                             System.out.println(" ˖˚⊹ ꣑ৎ\u200E " + (i + 1) + ". " + tasks.get(i).toString() + " ˖˚⊹ ꣑ৎ\u200E ");
                         }
                     } else {
-                        System.out.println("No tasks added yet.");
+                        System.out.println("Princess, there are no tasks added yet.");
+                        System.out.println("Let Pookie know what you need to do! (૭ ｡•̀ ᵕ •́｡ )૭ ");
+                        System.out.println("______________________________________________________________");
                     }
                 } else if (in.startsWith("mark ")) {
                     int index = Integer.parseInt(in.substring(5)) - 1;
@@ -50,7 +52,7 @@ public class Pookie {
                     System.out.println("OK... (¬_¬\") I've marked this task as not done yet:");
                     System.out.println(" " + tasks.get(index).toString());
                     System.out.println("______________________________________________________________");
-                } else if (in.startsWith("todo ")) {
+                } else if (in.startsWith("todo")) {
                     String taskDescription = in.substring(4).trim();
                     if (taskDescription.isEmpty()) {
                         throw new PookieException.EmptyDescriptionException("Princess, the description of a todo cannot be empty.");
@@ -62,7 +64,7 @@ public class Pookie {
                     System.out.println(" " + todoTask);
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     System.out.println("____________________________________________________________");
-                } else if (in.startsWith("deadline ")) {
+                } else if (in.startsWith("deadline")) {
                     String[] parts = in.substring(8).split(" /by ");
                     if (parts[0].trim().isEmpty()) {
                         throw new PookieException.EmptyDescriptionException("Princess, the description of a deadline cannot be empty.");
@@ -79,7 +81,7 @@ public class Pookie {
                     System.out.println(" " + deadlineTask);
                     System.out.println("Now you have " + tasks.size() + " tasks in the list");
                     System.out.println("______________________________________________________________");
-                } else if (in.startsWith("event ")) {
+                } else if (in.startsWith("event")) {
                     String[] parts = in.substring(5).split(" /from | /to ");
                     if (parts[0].trim().isEmpty()) {
                         throw new PookieException.EmptyDescriptionException("Princess, the description of an event cannot be empty.");
@@ -95,6 +97,17 @@ public class Pookie {
                     System.out.println("____________________________________________________________");
                     System.out.println("Alrighty! I've added this task:");
                     System.out.println(" " + eventTask);
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                    System.out.println("____________________________________________________________");
+                } else if (in.startsWith("delete")) {
+                    int index = Integer.parseInt(in.substring(6).trim()) - 1;
+                    if (index < 0 || index >= tasks.size()) {
+                        throw new PookieException.InvalidTaskIndexException("Princess, there is no such task to delete!");
+                    }
+                    Task removedTask = tasks.remove(index);
+                    System.out.println("____________________________________________________________");
+                    System.out.println("Okies! I've removed this task:");
+                    System.out.println(" " + removedTask.toString());
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     System.out.println("____________________________________________________________");
                 } else {
