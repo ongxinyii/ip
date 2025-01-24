@@ -1,7 +1,54 @@
-Hello from
- ____        _        
-|  _ \ _   _| | _____ 
-| | | | | | | |/ / _ \
-| |_| | |_| |   <  __/
-|____/ \__,_|_|\_\___|
-
+____________________________________________________________
+Hello! I'm Pookie
+⸜(｡˃ ᵕ ˂ )⸝♡
+What can I do for you?
+____________________________________________________________
+Your wish is my command! I've added this task:
+ [T][ ] borrow book
+Now you have 1 tasks in the list.
+____________________________________________________________
+Gotcha gorgeous! I've added this task:
+ [D][ ] return book (by: Sunday)
+Now you have 2 tasks in the list.
+______________________________________________________________
+Alrighty! I've added this task:
+ [E][ ] project meeting (from: Mon 2pm to: 4pm)
+Now you have 3 tasks in the list.
+____________________________________________________________
+ Here are the tasks in your list:
+ ˖˚⊹ ꣑ৎ‎ 1. [T][ ] borrow book ˖˚⊹ ꣑ৎ‎
+ ˖˚⊹ ꣑ৎ‎ 2. [D][ ] return book (by: Sunday) ˖˚⊹ ꣑ৎ‎
+ ˖˚⊹ ꣑ৎ‎ 3. [E][ ] project meeting (from: Mon 2pm to: 4pm) ˖˚⊹ ꣑ৎ‎
+____________________________________________________________
+Nice! ꉂ (≧ヮ≦) I've marked this task as done:
+ [D][X] return book (by: Sunday)
+______________________________________________________________
+OK... (¬_¬\") I've marked this task as not done yet:
+ [D][ ] return book (by: Sunday)
+______________________________________________________________
+Your wish is my command! I've added this task:
+ [T][ ] join sports club
+Now you have 4 tasks in the list.
+____________________________________________________________
+Nice! ꉂ (≧ヮ≦) I've marked this task as done:
+ [T][X] join sports club
+______________________________________________________________
+Gotcha gorgeous! I've added this task:
+ [D][ ] submit assignment (by: Friday)
+Now you have 5 tasks in the list.
+______________________________________________________________
+Alrighty! I've added this task:
+ [E][ ] team outing (from: Sat 5pm to: 9pm)
+Now you have 6 tasks in the list.
+____________________________________________________________
+ Here are the tasks in your list:
+ ˖˚⊹ ꣑ৎ‎ 1. [T][ ] borrow book ˖˚⊹ ꣑ৎ‎
+ ˖˚⊹ ꣑ৎ‎ 2. [D][ ] return book (by: Sunday) ˖˚⊹ ꣑ৎ‎
+ ˖˚⊹ ꣑ৎ‎ 3. [E][ ] project meeting (from: Mon 2pm to: 4pm) ˖˚⊹ ꣑ৎ‎
+ ˖˚⊹ ꣑ৎ‎ 4. [T][X] join sports club ˖˚⊹ ꣑ৎ‎
+ ˖˚⊹ ꣑ৎ‎ 5. [D][ ] submit assignment (by: Friday) ˖˚⊹ ꣑ৎ‎
+ ˖˚⊹ ꣑ৎ‎ 6. [E][ ] team outing (from: Sat 5pm to: 9pm) ˖˚⊹ ꣑ৎ‎
+____________________________________________________________
+Bye. ദ്ദി(˵ •̀ ᴗ - ˵ ) ✧
+Hope to see you soon!
+____________________________________________________________
