@@ -1,3 +1,5 @@
+package pookie.exception;
+
 public class PookieException extends Exception {
     public PookieException(String message) {
         super(message);

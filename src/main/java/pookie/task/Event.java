@@ -1,3 +1,6 @@
+package pookie.task;
+
+import pookie.exception.PookieException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -9,14 +12,14 @@ public class Event extends Task {
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a");
 
-    // ✅ Constructor that accepts LocalDateTime objects (used by Parser)
+    // Constructor that accepts LocalDateTime objects (used by Parser)
     public Event(String description, LocalDateTime start, LocalDateTime end) {
         super(description);
         this.start = start;
         this.end = end;
     }
 
-    // ✅ Constructor that accepts String inputs (used when manually adding an event)
+    // Constructor that accepts String inputs (used when manually adding an event)
     public Event(String description, String start, String end) throws PookieException {
         super(description);
         try {

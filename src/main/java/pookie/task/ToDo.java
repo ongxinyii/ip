@@ -1,3 +1,5 @@
+package pookie.task;
+
 public class ToDo extends Task {
     public ToDo (String description) {
         super(description);
@@ -12,9 +14,4 @@ public class ToDo extends Task {
     public String toString() {
         return "[T][" + getStatusIcon() + "] " + description;
     }
-
-//    @Override
-//    public String toString() {
-//        return "[T]" + super.toString();
-//    }
 }

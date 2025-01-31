@@ -1,3 +1,5 @@
+package pookie.ui;
+
 import java.util.Scanner;
 
 public class Ui {
