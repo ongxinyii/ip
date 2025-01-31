@@ -1,5 +1,7 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Pookie {
     public enum TaskType {
@@ -42,6 +44,8 @@ public class Pookie {
                     handleMarkUnmark(tasks, in, false);
                 } else if (in.startsWith("delete")) {
                     handleDelete(tasks, in);
+                } else if (in.startsWith("list on")) {
+                    handleListByDate(tasks, in.substring(8).trim());
                 } else {
                     String[] parts = in.split(" ", 2);
                     TaskType type;
@@ -120,6 +124,7 @@ public class Pookie {
         }
         Deadline deadlineTask = new Deadline(parts[0].trim(), parts[1].trim());
         tasks.add(deadlineTask);
+        Storage.saveTasks(tasks);
         System.out.println("______________________________________________________________");
         System.out.println("Gotcha! I've added this task:");
         System.out.println(" " + deadlineTask);
@@ -137,6 +142,7 @@ public class Pookie {
         }
         Event eventTask = new Event(parts[0].trim(), parts[1].trim(), parts[2].trim());
         tasks.add(eventTask);
+        Storage.saveTasks(tasks);
         System.out.println("____________________________________________________________");
         System.out.println("Alrighty! I've added this task:");
         System.out.println(" " + eventTask);
@@ -156,5 +162,28 @@ public class Pookie {
         System.out.println(" " + removedTask.toString());
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
         System.out.println("____________________________________________________________");
+    }
+
+    private static void handleListByDate(ArrayList<Task> tasks, String dateStr) {
+        try {
+            LocalDate searchDate = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            System.out.println("____________________________________________________________");
+            System.out.println("Here are the tasks on " + searchDate.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ":");
+
+            for (Task task : tasks) {
+                if (task instanceof Deadline) {
+                    if (((Deadline) task).getByDate().toLocalDate().equals(searchDate)) {
+                        System.out.println(" " + task);
+                    }
+                } else if (task instanceof Event) {
+                    if (((Event) task).getStartDate().toLocalDate().equals(searchDate)) {
+                        System.out.println(" " + task);
+                    }
+                }
+            }
+            System.out.println("____________________________________________________________");
+        } catch (Exception e) {
+            System.out.println("Princess, please enter the date in the correct format: yyyy-MM-dd (e.g., 2019-12-02).");
+        }
     }
 }
