@@ -16,20 +16,17 @@ public class Storage {
     public void saveTasks(ArrayList<Task> tasks) throws PookieException {
         File file = new File(filePath);
 
-        try {
-            file.getParentFile().mkdirs(); // Ensure parent directories exist
+        // Ensure parent directory exists
+        if (file.getParentFile() != null) {
+            file.getParentFile().mkdirs();
+        }
 
-            if (!file.exists() && !file.createNewFile()) {
-                throw new PookieException("Error creating task storage file.");
-            }
-
-            FileWriter writer = new FileWriter(file);
+        try (FileWriter writer = new FileWriter(file)) {
             for (Task task : tasks) {
                 writer.write(task.toFileFormat() + System.lineSeparator());
             }
-            writer.close();
         } catch (IOException e) {
-            throw new PookieException("Error saving tasks to file: " + e.getMessage());
+            throw new PookieException("Error saving tasks: " + e.getMessage());
         }
     }
 

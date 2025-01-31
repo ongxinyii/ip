@@ -37,7 +37,8 @@ public class Event extends Task {
 
     @Override
     public String toString() {
-        return "[E][" + getStatusIcon() + "] " + description + " (from: " + start.format(OUTPUT_FORMAT) + " to: " + end.format(OUTPUT_FORMAT) + ")";
+        return "[E][" + getStatusIcon() + "] " + description + " (from: " + start.format(OUTPUT_FORMAT).toUpperCase() + " to: " + end.format(OUTPUT_FORMAT).toUpperCase() + ")";
+
     }
 
     public LocalDateTime getStartDate() {
