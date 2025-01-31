@@ -5,9 +5,18 @@ import java.time.format.DateTimeParseException;
 public class Event extends Task {
     protected LocalDateTime start;
     protected LocalDateTime end;
+
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a");
 
+    // ✅ Constructor that accepts LocalDateTime objects (used by Parser)
+    public Event(String description, LocalDateTime start, LocalDateTime end) {
+        super(description);
+        this.start = start;
+        this.end = end;
+    }
+
+    // ✅ Constructor that accepts String inputs (used when manually adding an event)
     public Event(String description, String start, String end) throws PookieException {
         super(description);
         try {
@@ -30,6 +39,10 @@ public class Event extends Task {
 
     public LocalDateTime getStartDate() {
         return start;
+    }
+
+    public LocalDateTime getEndDate() {
+        return end;
     }
 }
 
