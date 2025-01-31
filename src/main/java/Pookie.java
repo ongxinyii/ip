@@ -9,12 +9,11 @@ public class Pookie {
     }
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        ArrayList<Task> tasks = Storage.loadTasks();
 
         System.out.println("____________________________________________________________");
         System.out.println("Hello your highness! I'm Pookie\n⸜(｡˃ ᵕ ˂ )⸝♡\nWhat can I do for you?");
         System.out.println("____________________________________________________________");
-
-        ArrayList<Task> tasks = new ArrayList<>();
 
         while (true) {
             String in = sc.nextLine().trim();
@@ -87,13 +86,12 @@ public class Pookie {
         }
         if (isMark) {
             tasks.get(index).markDone();
-            System.out.println("______________________________________________________________");
-            System.out.println("Nice! ꉂ (≧ヮ≦) I've marked this task as done:");
         } else {
             tasks.get(index).markNotDone();
-            System.out.println("______________________________________________________________");
-            System.out.println("OK... (¬_¬\") I've marked this task as not done yet:");
         }
+        Storage.saveTasks(tasks);
+        System.out.println("______________________________________________________________");
+        System.out.println(isMark ? "Nice! ꉂ (≧ヮ≦) I've marked this task as done:" : "OK... (¬_¬\") I've marked this task as not done yet:");
         System.out.println(" " + tasks.get(index).toString());
         System.out.println("______________________________________________________________");
     }
@@ -104,6 +102,7 @@ public class Pookie {
         }
         ToDo todoTask = new ToDo(description);
         tasks.add(todoTask);
+        Storage.saveTasks(tasks);
         System.out.println("____________________________________________________________");
         System.out.println("Your wish is my command! I've added this task:");
         System.out.println(" " + todoTask);
@@ -151,6 +150,7 @@ public class Pookie {
             throw new PookieException("Princess, there is no such task to delete!");
         }
         Task removedTask = tasks.remove(index);
+        Storage.saveTasks(tasks);
         System.out.println("____________________________________________________________");
         System.out.println("Okies! I've removed this task:");
         System.out.println(" " + removedTask.toString());
