@@ -5,6 +5,11 @@ import pookie.list.TaskList;
 import pookie.exception.PookieException;
 import pookie.ui.Ui;
 
+/**
+ * The main entry point for the Pookie chatbot application.
+ * It initializes necessary components (UI, storage, parser, and task list)
+ * and runs the main event loop.
+ */
 public class Pookie {
 
     private final Storage storage;
@@ -12,6 +17,11 @@ public class Pookie {
     private final Ui ui;
     private final Parser parser;
 
+    /**
+     * Constructs a Pookie chatbot instance.
+     *
+     * @param filePath The file path to store and load tasks.
+     */
     public Pookie(String filePath) {
         ui = new Ui();
         storage = new Storage(filePath);
@@ -27,6 +37,10 @@ public class Pookie {
         this.tasks = loadedTasks;
     }
 
+    /**
+     * Runs the main event loop of the chatbot.
+     * Continuously reads and processes user commands.
+     */
     public void run() {
         ui.showWelcome();
         while (true) {
@@ -39,6 +53,11 @@ public class Pookie {
         }
     }
 
+    /**
+     * The main method to start the chatbot application.
+     *
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
         new Pookie(System.getProperty("user.dir") + "/data/pookie.txt").run();
     }

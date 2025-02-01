@@ -11,6 +11,16 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class Parser {
+
+    /**
+     * Parses and executes the user command.
+     *
+     * @param input   The user input command.
+     * @param tasks   The current list of tasks.
+     * @param ui      The user interface for displaying messages.
+     * @param storage The storage handler for saving tasks.
+     * @throws PookieException If an invalid command is encountered.
+     */
     public static void parseCommand(String input, TaskList tasks, Ui ui, Storage storage) throws PookieException {
         input = input.trim();
 
@@ -56,6 +66,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a task from a line of saved data.
+     *
+     * @param line The saved task string in file format.
+     * @return A reconstructed {@code Task} object.
+     * @throws PookieException If the task format is invalid.
+     */
     public static Task parseTaskFromLine(String line) throws PookieException {
         String[] parts = line.split(" \\| "); // Split task format
 
@@ -97,6 +114,9 @@ public class Parser {
         }
     }
 
+    /**
+     * Handles creation of a ToDo task.
+     */
     private static void handleTodo(TaskList tasks, String description, Ui ui, Storage storage) throws PookieException {
         if (description.isEmpty()) {
             throw new PookieException.EmptyDescriptionException("Princess, the description of a todo cannot be empty.");
@@ -105,6 +125,9 @@ public class Parser {
         tasks.addTask(todoTask, ui, storage);
     }
 
+    /**
+     * Handles creation of a Deadline task.
+     */
     private static void handleDeadline(TaskList tasks, String details, Ui ui, Storage storage) throws PookieException {
         String[] parts = details.split(" /by ");
         if (parts[0].trim().isEmpty()) {
@@ -123,6 +146,9 @@ public class Parser {
         }
     }
 
+    /**
+     * Handles creation of an Event task.
+     */
     private static void handleEvent(TaskList tasks, String details, Ui ui, Storage storage) throws PookieException {
         String[] parts = details.split(" /from | /to ");
         if (parts[0].trim().isEmpty()) {
@@ -142,6 +168,9 @@ public class Parser {
         }
     }
 
+    /**
+     * Lists tasks occurring on a specific date.
+     */
     private static void handleListByDate(TaskList tasks, String dateStr, Ui ui) {
         try {
             LocalDate searchDate = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
