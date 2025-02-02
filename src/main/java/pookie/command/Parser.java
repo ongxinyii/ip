@@ -30,6 +30,9 @@ public class Parser {
             tasks.deleteTask(index, ui, storage);
         } else if (input.startsWith("list on ")) {
             handleListByDate(tasks, input.substring(8).trim(), ui);
+        } else if (input.startsWith("find ")) {
+            String keyword = input.substring(5).trim();
+            tasks.findTasks(keyword, ui);
         } else {
             String[] parts = input.split(" ", 2);
             TaskType type;

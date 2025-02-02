@@ -58,6 +58,30 @@ public class TaskList {
         ui.showMessage("Your wish is my command! I've added this task:\n " + task + "\nNow you have " + tasks.size() + " tasks.");
     }
 
+    public void findTasks(String keyword, Ui ui) {
+        if (keyword.isEmpty()) {
+            ui.showError("Princess, please provide a keyword to search for.");
+            return;
+        }
+
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+                matchingTasks.add(task);
+            }
+        }
+
+        if (matchingTasks.isEmpty()) {
+            ui.showError("Princess, there are no matching tasks in your list.");
+        } else {
+            StringBuilder sb = new StringBuilder("Here are the matching tasks in your list ˚ʚ♡ɞ˚ :\n");
+            for (int i = 0; i < matchingTasks.size(); i++) {
+                sb.append("\n").append(i + 1).append(". ").append(matchingTasks.get(i));
+            }
+            ui.showMessage(sb.toString());
+        }
+    }
+
     public ArrayList<Task> getTasks() {
         return tasks;
     }

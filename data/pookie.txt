@@ -5,3 +5,5 @@ D | 0 | graduate | 2027-06-30 1600
 E | 0 | sleep | 2025-01-31 2300 | 2025-02-01 0800
 D | 0 | get better | 2025-01-31 2359
 T | 0 | buy lunch
+T | 0 | buy clothes
+T | 0 | clothes buyer

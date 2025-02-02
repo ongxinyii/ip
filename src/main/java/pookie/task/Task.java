@@ -23,6 +23,9 @@ public abstract class Task {
 
     public abstract String toFileFormat();
 
+    public String getDescription() {
+        return this.description;
+    }
 //    @Override
 //    public String toString() {
 //        return "[" + getStatusIcon() + "] " + description;
