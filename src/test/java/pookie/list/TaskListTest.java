@@ -2,8 +2,10 @@ package pookie.list;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pookie.task.ToDo;
-import pookie.task.Task;
+
+import java.time.LocalDateTime;
+
+import pookie.task.*;
 import pookie.ui.Ui;
 import pookie.storage.Storage;
 import pookie.exception.PookieException;
@@ -53,6 +55,15 @@ public class TaskListTest {
         // Marking the task again (should remain marked)
         taskList.markTask(0, true, ui, storage);
         assertTrue(task.getStatusIcon().equals("X"));
+    }
+
+    @Test
+    void findTasks_matchingTasks_success() throws PookieException {
+        taskList.addTask(new ToDo("read book"), ui, storage);
+        taskList.addTask(new Deadline("return book", LocalDateTime.of(2025, 6, 6, 12, 0)), ui, storage);
+        taskList.addTask(new ToDo("write report"), ui, storage);
+
+        taskList.findTasks("book", ui);
     }
 
     @Test

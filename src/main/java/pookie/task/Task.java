@@ -46,4 +46,15 @@ public abstract class Task {
      * @return A formatted string representation of the task.
      */
     public abstract String toFileFormat();
+<<<<<<< HEAD
+=======
+
+    public String getDescription() {
+        return this.description;
+    }
+//    @Override
+//    public String toString() {
+//        return "[" + getStatusIcon() + "] " + description;
+//    }
+>>>>>>> branch-Level-9
 }
