@@ -1,0 +1,28 @@
+Feb 01, 2025 10:59:54 PM seedu.address.Main main
+WARNING: The warning about Unsupported JavaFX configuration below (if any) can be ignored.
+Feb 01, 2025 10:59:57 PM seedu.address.MainApp init
+INFO: =============================[ Initializing AddressBook ]===========================
+Feb 01, 2025 10:59:57 PM seedu.address.MainApp initConfig
+INFO: Using config file : config.json
+Feb 01, 2025 10:59:57 PM seedu.address.MainApp initConfig
+INFO: Creating new config file config.json
+Feb 01, 2025 10:59:57 PM seedu.address.commons.core.LogsCenter init
+INFO: Log level will be set as: INFO
+Feb 01, 2025 10:59:57 PM seedu.address.MainApp initPrefs
+INFO: Using preference file : preferences.json
+Feb 01, 2025 10:59:57 PM seedu.address.MainApp initPrefs
+INFO: Creating new preference file preferences.json
+Feb 01, 2025 10:59:57 PM seedu.address.MainApp initModelManager
+INFO: Using data file : data\addressbook.json
+Feb 01, 2025 10:59:57 PM seedu.address.MainApp initModelManager
+INFO: Creating a new data file data\addressbook.json populated with a sample AddressBook.
+Feb 01, 2025 10:59:57 PM seedu.address.MainApp start
+INFO: Starting AddressBook V0.2.2ea
+Feb 01, 2025 10:59:57 PM seedu.address.ui.UiManager start
+INFO: Starting UI...
+Feb 01, 2025 11:02:30 PM seedu.address.logic.LogicManager execute
+INFO: ----------------[USER COMMAND][add n/Ong Xinyi p/98223504 e/E1278125@u.nus.edu a/Block Fake Address 512345 [t/baddie]]
+Feb 01, 2025 11:02:30 PM seedu.address.ui.MainWindow executeCommand
+INFO: Result: New person added: Ong Xinyi; Phone: 98223504; Email: E1278125@u.nus.edu; Address: Block Fake Address 512345 [t/baddie]; Tags: 
+Feb 01, 2025 11:04:51 PM seedu.address.MainApp stop
+INFO: ============================ [ Stopping AddressBook ] =============================

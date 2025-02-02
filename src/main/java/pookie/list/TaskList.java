@@ -97,13 +97,12 @@ public class TaskList {
         ui.showMessage("Your wish is my command! I've added this task:\n " + task + "\nNow you have " + tasks.size() + " tasks.");
     }
 
-<<<<<<< HEAD
     /**
      * Retrieves the list of tasks.
      *
      * @return An ArrayList containing all tasks.
      */
-=======
+
     public void findTasks(String keyword, Ui ui) {
         if (keyword.isEmpty()) {
             ui.showError("Princess, please provide a keyword to search for.");
@@ -128,7 +127,6 @@ public class TaskList {
         }
     }
 
->>>>>>> branch-Level-9
     public ArrayList<Task> getTasks() {
         return tasks;
     }
