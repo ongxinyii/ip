@@ -9,14 +9,27 @@ import java.util.ArrayList;
 public class TaskList {
     private ArrayList<Task> tasks;
 
+    /**
+     * Constructs an empty TaskList.
+     */
     public TaskList() {
         this.tasks = new ArrayList<>();
     }
 
+    /**
+     * Constructs a TaskList with a given list of tasks.
+     *
+     * @param tasks An ArrayList containing existing tasks.
+     */
     public TaskList(ArrayList<Task> tasks) {
         this.tasks = tasks;
     }
 
+    /**
+     * Prints the list of tasks.
+     *
+     * @param ui The UI instance to display the task list.
+     */
     public void printTasks(Ui ui) {
         if (tasks.isEmpty()) {
             ui.showMessage("Princess, there are no tasks added yet.");
@@ -29,6 +42,15 @@ public class TaskList {
         ui.showMessage(sb.toString());
     }
 
+    /**
+     * Marks or unmarks a task as done based on the given index.
+     *
+     * @param index The index of the task to be marked/unmarked.
+     * @param isDone A boolean indicating whether to mark (true) or unmark (false) the task.
+     * @param ui The UI instance to display feedback.
+     * @param storage The storage instance to update the saved tasks.
+     * @throws PookieException If the given index is invalid.
+     */
     public void markTask(int index, boolean isDone, Ui ui, Storage storage) throws PookieException {
         if (index < 0 || index >= tasks.size()) {
             throw new PookieException("Princess, there is no such task!");
@@ -43,6 +65,14 @@ public class TaskList {
         ui.showMessage(tasks.get(index).toString());
     }
 
+    /**
+     * Deletes a task from the list based on the given index.
+     *
+     * @param index The index of the task to be deleted.
+     * @param ui The UI instance to display feedback.
+     * @param storage The storage instance to update the saved tasks.
+     * @throws PookieException If the given index is invalid.
+     */
     public void deleteTask(int index, Ui ui, Storage storage) throws PookieException {
         if (index < 0 || index >= tasks.size()) {
             throw new PookieException("Princess, there is no such task to delete!");
@@ -52,12 +82,25 @@ public class TaskList {
         ui.showMessage("Okies! I've removed this task:\n" + removedTask);
     }
 
+    /**
+     * Adds a new task to the list and updates storage.
+     *
+     * @param task The task to be added.
+     * @param ui The UI instance to display feedback.
+     * @param storage The storage instance to update the saved tasks.
+     * @throws PookieException If an error occurs while saving the task.
+     */
     public void addTask(Task task, Ui ui, Storage storage) throws PookieException {
         tasks.add(task);
         storage.saveTasks(tasks);
         ui.showMessage("Your wish is my command! I've added this task:\n " + task + "\nNow you have " + tasks.size() + " tasks.");
     }
 
+    /**
+     * Retrieves the list of tasks.
+     *
+     * @return An ArrayList containing all tasks.
+     */
     public ArrayList<Task> getTasks() {
         return tasks;
     }
