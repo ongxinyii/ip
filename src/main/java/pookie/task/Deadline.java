@@ -3,10 +3,13 @@ package pookie.task;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents an deadline task that has end time.
+ * This task type allows users to specify events that have a deadline.
+ */
 public class Deadline extends Task {
-    protected LocalDateTime by;
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a");
-
+    protected LocalDateTime by;
     /**
      * Constructs a Deadline task with a specified description and due date.
      *

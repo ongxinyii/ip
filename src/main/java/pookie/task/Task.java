@@ -1,5 +1,12 @@
 package pookie.task;
 
+/**
+ * Represents an abstract task in Pookie.
+ * <p>
+ * A task has a description and a completion status (done or not done).
+ * This class serves as a base for specific types of tasks such as {@code ToDo}, {@code Deadline}, and {@code Event}.
+ * </p>
+ */
 public abstract class Task {
     protected String description;
     protected boolean isDone;
@@ -50,8 +57,4 @@ public abstract class Task {
     public String getDescription() {
         return this.description;
     }
-//    @Override
-//    public String toString() {
-//        return "[" + getStatusIcon() + "] " + description;
-//    }
 }

@@ -1,8 +1,8 @@
 package pookie;
 import pookie.command.Parser;
-import pookie.storage.Storage;
-import pookie.list.TaskList;
 import pookie.exception.PookieException;
+import pookie.list.TaskList;
+import pookie.storage.Storage;
 import pookie.ui.Ui;
 
 /**
@@ -29,10 +29,10 @@ public class Pookie {
 
         TaskList loadedTasks;
         try {
-            loadedTasks = new TaskList(storage.loadTasks());  // This can throw PookieException
+            loadedTasks = new TaskList(storage.loadTasks()); // This can throw PookieException
         } catch (PookieException e) {
             ui.showLoadingError();
-            loadedTasks = new TaskList();  // If an error occurs, initialize with an empty list
+            loadedTasks = new TaskList(); // If an error occurs, initialize with an empty list
         }
         this.tasks = loadedTasks;
     }

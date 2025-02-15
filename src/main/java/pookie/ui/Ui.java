@@ -2,6 +2,12 @@ package pookie.ui;
 
 import java.util.Scanner;
 
+/**
+ * The {@code Ui} class handles user interactions, including displaying messages,
+ * reading user input, and printing formatted outputs.
+ * It provides methods for showing welcome and goodbye messages, displaying errors,
+ * and formatting output for better readability.
+ */
 public class Ui {
     private final Scanner sc;
 
@@ -52,7 +58,6 @@ public class Ui {
      * @param message The error message to display.
      */
     public void showError(String message) {
-        //printBorder();
         System.out.println("OOPS!!! " + message);
         printBorder();
     }
@@ -63,7 +68,6 @@ public class Ui {
      * @param message The message to be displayed.
      */
     public void showMessage(String message) {
-       // printBorder();
         System.out.println(message);
         printBorder();
     }

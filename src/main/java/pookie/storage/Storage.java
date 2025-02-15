@@ -1,12 +1,28 @@
 package pookie.storage;
 
-import pookie.task.*;
-import pookie.exception.PookieException;
-import pookie.command.Parser;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import pookie.command.Parser;
+import pookie.exception.PookieException;
+import pookie.task.Task;
+
+/**
+ * Manages the loading and saving of tasks to a file.
+ * This class is responsible for persisting user tasks by writing them to
+ * a specified file and retrieving them when needed.
+ * <p>
+ * The class supports:
+ * <ul>
+ *     <li>Saving an {@code ArrayList<Task>} to a file.</li>
+ *     <li>Loading tasks from a file into an {@code ArrayList<Task>}.</li>
+ * </ul>
+ * It ensures that the file is properly created if it does not exist.
+ */
 public class Storage {
     private final String filePath;
 

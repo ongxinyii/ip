@@ -1,18 +1,21 @@
 package pookie.task;
 
-import pookie.exception.PookieException;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class Event extends Task {
-    protected LocalDateTime start;
-    protected LocalDateTime end;
+import pookie.exception.PookieException;
 
+/**
+ * Represents an event task that has a start and end time.
+ * This task type allows users to specify events that occur over a period of time.
+ */
+public class Event extends Task {
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a");
 
+    protected LocalDateTime start;
+    protected LocalDateTime end;
     /**
      * Constructs an Event task with a specified description, start date, and end date.
      *
@@ -41,7 +44,8 @@ public class Event extends Task {
             this.start = LocalDateTime.parse(start, INPUT_FORMAT);
             this.end = LocalDateTime.parse(end, INPUT_FORMAT);
         } catch (DateTimeParseException e) {
-            throw new PookieException("Princess, please enter the event times in the correct format: yyyy-MM-dd HHmm (e.g., 2019-12-02 1800).");
+            throw new PookieException("Princess, please enter the event times in the correct format: "
+                    + "yyyy-MM-dd HHmm (e.g., 2019-12-02 1800).");
         }
     }
 
@@ -52,7 +56,8 @@ public class Event extends Task {
      */
     @Override
     public String toFileFormat() {
-        return "E | " + (isDone ? "1" : "0") + " | " + description + " | " + start.format(INPUT_FORMAT) + " | " + end.format(INPUT_FORMAT);
+        return "E | " + (isDone ? "1" : "0") + " | " + description + " | " + start.format(INPUT_FORMAT) + " | "
+                + end.format(INPUT_FORMAT);
     }
 
     /**
@@ -62,7 +67,8 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return "[E][" + getStatusIcon() + "] " + description + " (from: " + start.format(OUTPUT_FORMAT).toUpperCase() + " to: " + end.format(OUTPUT_FORMAT).toUpperCase() + ")";
+        return "[E][" + getStatusIcon() + "] " + description + " (from: " + start.format(OUTPUT_FORMAT).toUpperCase()
+                + " to: " + end.format(OUTPUT_FORMAT).toUpperCase() + ")";
 
     }
 
