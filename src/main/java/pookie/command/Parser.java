@@ -79,6 +79,41 @@ public class Parser {
     }
 
     /**
+     * Parses the user input command and returns the corresponding response from Pookie.
+     * Unlike {@code parseCommand}, this method does not terminate the application
+     * and instead returns a string response to be displayed in the GUI.
+     *
+     * @param input   The user input command.
+     * @param tasks   The current list of tasks.
+     * @param ui      The user interface for displaying messages.
+     * @param storage The storage handler for saving tasks.
+     * @return A string response representing the result of executing the command.
+     */
+    public static String parseCommandAndReturn(String input,
+                                               TaskList tasks, Ui ui, Storage storage) throws PookieException {
+        input = input.trim();
+        StringBuilder response = new StringBuilder();
+
+        if (input.equalsIgnoreCase("bye")) {
+            return "Bye Princess! Pookie hopes to see you again!";
+        } else if (input.equalsIgnoreCase("list")) {
+            response.append("Here are your tasks:\n").append(tasks.getTasks());
+        } else if (input.startsWith("mark ")) {
+            int index = Integer.parseInt(input.substring(5).trim()) - 1;
+            tasks.markTask(index, true, ui, storage);
+            response.append("Nice! I've marked this task as done.");
+        } else if (input.startsWith("unmark ")) {
+            int index = Integer.parseInt(input.substring(7).trim()) - 1;
+            tasks.markTask(index, false, ui, storage);
+            response.append("OK, I've unmarked this task.");
+        } else {
+            response.append("Pookie doesn't understand... (╥﹏╥)");
+        }
+
+        return response.toString();
+    }
+
+    /**
      * Parses a task from a line of saved data.
      *
      * @param line The saved task string in file format.
