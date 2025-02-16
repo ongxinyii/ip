@@ -24,6 +24,10 @@ public class Main extends Application {
             stage.setScene(scene);
             fxmlLoader.<MainWindow>getController().setPookie(pookie); // inject the Duke instance
             stage.show();
+            System.out.println("Received arguments:");
+            for (String arg : getParameters().getRaw()) {
+                System.out.println(arg);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

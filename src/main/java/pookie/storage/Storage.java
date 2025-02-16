@@ -51,6 +51,7 @@ public class Storage {
 
         try (FileWriter writer = new FileWriter(file)) {
             for (Task task : tasks) {
+                assert task != null : "Task should not be null before saving";
                 writer.write(task.toFileFormat() + System.lineSeparator());
             }
         } catch (IOException e) {

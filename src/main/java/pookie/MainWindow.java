@@ -25,13 +25,26 @@ public class MainWindow extends AnchorPane {
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/User.png"));
     private Image pookieImage = new Image(this.getClass().getResourceAsStream("/images/Pookie.png"));
 
+    /**
+     * Initializes the GUI components after loading the FXML file.
+     * <p>
+     * This method sets up the necessary bindings and event listeners for UI elements.
+     * Specifically, it ensures that the ScrollPane automatically scrolls to the bottom
+     * as new dialog messages are added to the dialog container.
+     * </p>
+     */
     @FXML
     public void initialize() {
+        assert scrollPane != null : "ScrollPane should not be null";
+        assert dialogContainer != null : "DialogContainer should not be null";
+        assert userInput != null : "UserInput should not be null";
+        assert sendButton != null : "SendButton should not be null";
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
     /** Injects the Pookie instance */
     public void setPookie(Pookie p) {
+        assert p != null : "Pookie instance should not be null";
         pookie = p;
     }
 
@@ -43,6 +56,7 @@ public class MainWindow extends AnchorPane {
     private void handleUserInput() {
         String input = userInput.getText();
         String response = pookie.getResponse(input);
+        System.out.println("User input received: " + input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
                 DialogBox.getPookieDialog(response, pookieImage)
