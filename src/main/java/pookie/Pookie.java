@@ -25,9 +25,13 @@ public class Pookie {
      * @param filePath The file path to store and load tasks.
      */
     public Pookie(String filePath) {
+        assert filePath != null && !filePath.isEmpty() : "File path must not be null or empty";
+
         ui = new Ui();
         storage = new Storage(filePath);
         parser = new Parser();
+
+        System.out.println("Loading tasks from: " + DEFAULT_FILE_PATH);
 
         TaskList loadedTasks;
         try {

@@ -27,6 +27,7 @@ public class TaskList {
      * @param tasks An ArrayList containing existing tasks.
      */
     public TaskList(ArrayList<Task> tasks) {
+        assert tasks != null;
         this.tasks = tasks;
     }
 
@@ -57,9 +58,9 @@ public class TaskList {
      * @throws PookieException If the given index is invalid.
      */
     public void markTask(int index, boolean isDone, Ui ui, Storage storage) throws PookieException {
-        if (index < 0 || index >= tasks.size()) {
-            throw new PookieException("Princess, there is no such task!");
-        }
+        assert ui != null : "UI instance must not be null";
+        assert storage != null : "Storage instance must not be null";
+        assert index >= 0 && index < tasks.size() : "Invalid task index: " + index;
         if (isDone) {
             tasks.get(index).markDone();
         } else {
@@ -104,7 +105,6 @@ public class TaskList {
 
     /**
      * Retrieves the list of tasks.
-     *
      * An ArrayList containing all tasks.
      */
     public void findTasks(String keyword, Ui ui) {

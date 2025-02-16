@@ -11,7 +11,6 @@ import pookie.storage.Storage;
 import pookie.task.Deadline;
 import pookie.task.Event;
 import pookie.task.Task;
-import pookie.task.TaskType;
 import pookie.task.ToDo;
 import pookie.ui.Ui;
 
@@ -31,6 +30,11 @@ public class Parser {
      * @throws PookieException If an invalid command is encountered.
      */
     public static void parseCommand(String input, TaskList tasks, Ui ui, Storage storage) throws PookieException {
+        assert input != null : "Input command should not be null";
+        assert tasks != null : "TaskList instance should not be null";
+        assert ui != null : "UI instance should not be null";
+        assert storage != null : "Storage instance should not be null";
+
         input = input.trim();
 
         if (input.equalsIgnoreCase("bye")) {
@@ -53,23 +57,23 @@ public class Parser {
             String keyword = input.substring(5).trim();
             tasks.findTasks(keyword, ui);
         } else {
+            // Ensure we correctly split the command and argument
             String[] parts = input.split(" ", 2);
-            TaskType type;
+            String command = parts[0].trim().toLowerCase(); // Convert command to lowercase
 
-            try {
-                type = TaskType.valueOf(parts[0].toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new PookieException("Sowwieeee (╥﹏╥) Pookie doesn't understand...");
-            }
+            System.out.println("Command received: " + command);
 
-            switch (type) {
-            case TODO:
+            switch (command) {
+            case "todo":
+                System.out.println("Processing TODO command...");
                 handleTodo(tasks, parts.length > 1 ? parts[1].trim() : "", ui, storage);
                 break;
-            case DEADLINE:
+            case "deadline":
+                System.out.println("Processing DEADLINE command...");
                 handleDeadline(tasks, parts.length > 1 ? parts[1].trim() : "", ui, storage);
                 break;
-            case EVENT:
+            case "event":
+                System.out.println("Processing EVENT command...");
                 handleEvent(tasks, parts.length > 1 ? parts[1].trim() : "", ui, storage);
                 break;
             default:
@@ -91,6 +95,11 @@ public class Parser {
      */
     public static String parseCommandAndReturn(String input, TaskList tasks, Ui ui,
                                                Storage storage) throws PookieException {
+        assert input != null : "Input command should not be null";
+        assert tasks != null : "TaskList instance should not be null";
+        assert ui != null : "UI instance should not be null";
+        assert storage != null : "Storage instance should not be null";
+
         input = input.trim();
         StringBuilder response = new StringBuilder();
 
@@ -99,15 +108,78 @@ public class Parser {
         } else if (input.equalsIgnoreCase("list")) {
             response.append("Here are your tasks:\n").append(tasks.getTasks());
         } else if (input.startsWith("mark ")) {
-            int index = Integer.parseInt(input.substring(5).trim()) - 1;
-            tasks.markTask(index, true, ui, storage);
-            response.append("Nice! I've marked this task as done.");
+            try {
+                int index = Integer.parseInt(input.substring(5).trim()) - 1;
+                tasks.markTask(index, true, ui, storage);
+                response.append("Nice! I've marked this task as done:\n").append(tasks.getTasks().get(index));
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                response.append("Oops! Please provide a valid task number to mark.");
+            }
         } else if (input.startsWith("unmark ")) {
-            int index = Integer.parseInt(input.substring(7).trim()) - 1;
-            tasks.markTask(index, false, ui, storage);
-            response.append("OK, I've unmarked this task.");
+            try {
+                int index = Integer.parseInt(input.substring(7).trim()) - 1;
+                tasks.markTask(index, false, ui, storage);
+                response.append("OK, I've unmarked this task:\n").append(tasks.getTasks().get(index));
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                response.append("Oops! Please provide a valid task number to unmark.");
+            }
+        } else if (input.startsWith("delete ")) {
+            try {
+                int index = Integer.parseInt(input.substring(7).trim()) - 1;
+                Task removedTask = tasks.getTasks().get(index);
+                tasks.deleteTask(index, ui, storage);
+                response.append("OK! I've removed this task:\n").append(removedTask);
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                response.append("Oops! Please provide a valid task number to delete.");
+            }
+        } else if (input.startsWith("list on ")) {
+            String dateStr = input.substring(8).trim();
+            handleListByDate(tasks, dateStr, ui);
+            response.append("Listed tasks for " + dateStr + ".");
+        } else if (input.startsWith("find ")) {
+            String keyword = input.substring(5).trim();
+            tasks.findTasks(keyword, ui);
         } else {
-            response.append("Pookie doesn't understand... (╥﹏╥)");
+            // Reuse existing methods for task creation
+            String[] parts = input.split(" ", 2);
+            String command = parts[0].trim().toLowerCase();
+
+            switch (command) {
+            case "todo":
+                if (parts.length < 2 || parts[1].trim().isEmpty()) {
+                    response.append("Oops! The description of a todo cannot be empty.");
+                } else {
+                    handleTodo(tasks, parts[1].trim(), ui, storage);
+                    response.append("Got it! I've added this task:\n")
+                            .append(tasks.getTasks().get(tasks.getTasks().size() - 1));
+                }
+                break;
+
+            case "deadline":
+                if (parts.length < 2 || !parts[1].contains(" /by ")) {
+                    response.append("Oops! The correct format for a deadline is:\n")
+                            .append("deadline <task description> /by <yyyy-MM-dd HHmm>");
+                } else {
+                    handleDeadline(tasks, parts[1].trim(), ui, storage);
+                    response.append("Got it! I've added this task:\n")
+                            .append(tasks.getTasks().get(tasks.getTasks().size() - 1));
+                }
+                break;
+
+            case "event":
+                if (parts.length < 2 || !parts[1].contains(" /from ") || !parts[1].contains(" /to ")) {
+                    response.append("Oops! The correct format for an event is:\n")
+                            .append("event <task description> /from <yyyy-MM-dd HHmm> /to <yyyy-MM-dd HHmm>");
+                } else {
+                    handleEvent(tasks, parts[1].trim(), ui, storage);
+                    response.append("Got it! I've added this task:\n")
+                            .append(tasks.getTasks().get(tasks.getTasks().size() - 1));
+                }
+                break;
+
+            default:
+                response.append("Pookie doesn't understand... (╥﹏╥)");
+            }
         }
 
         return response.toString();
@@ -121,6 +193,8 @@ public class Parser {
      * @throws PookieException If the task format is invalid.
      */
     public static Task parseTaskFromLine(String line) throws PookieException {
+        assert line != null && !line.isEmpty() : "Task line must not be null or empty";
+
         String[] parts = line.split(" \\| "); // Split task format
 
         if (parts.length < 3) {
