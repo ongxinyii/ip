@@ -98,12 +98,14 @@ public class TaskList {
     public void addTask(Task task, Ui ui, Storage storage) throws PookieException {
         tasks.add(task);
         storage.saveTasks(tasks);
-        ui.showMessage("Your wish is my command! I've added this task:\n " + task + "\nNow you have " + tasks.size()
-                + " tasks.");
+        ui.showMessage("Your wish is my command! I've added this task:\n " + task + "\nNow you have "
+                + tasks.size() + " tasks.");
     }
 
     /**
      * Retrieves the list of tasks.
+     *
+     * An ArrayList containing all tasks.
      */
     public void findTasks(String keyword, Ui ui) {
         if (keyword.isEmpty()) {

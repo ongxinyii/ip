@@ -89,8 +89,8 @@ public class Parser {
      * @param storage The storage handler for saving tasks.
      * @return A string response representing the result of executing the command.
      */
-    public static String parseCommandAndReturn(String input,
-                                               TaskList tasks, Ui ui, Storage storage) throws PookieException {
+    public static String parseCommandAndReturn(String input, TaskList tasks, Ui ui,
+                                               Storage storage) throws PookieException {
         input = input.trim();
         StringBuilder response = new StringBuilder();
 
