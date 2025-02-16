@@ -1,12 +1,16 @@
 package pookie.list;
 
-import pookie.task.*;
-import pookie.storage.Storage;
-import pookie.ui.Ui;
-import pookie.exception.PookieException;
-
 import java.util.ArrayList;
 
+import pookie.exception.PookieException;
+import pookie.storage.Storage;
+import pookie.task.Task;
+import pookie.ui.Ui;
+
+/**
+ * Represents a list of tasks that the user can manage.
+ * Provides methods to add, delete, mark/unmark, print, and search for tasks.
+ */
 public class TaskList {
     private ArrayList<Task> tasks;
 
@@ -94,15 +98,15 @@ public class TaskList {
     public void addTask(Task task, Ui ui, Storage storage) throws PookieException {
         tasks.add(task);
         storage.saveTasks(tasks);
-        ui.showMessage("Your wish is my command! I've added this task:\n " + task + "\nNow you have " + tasks.size() + " tasks.");
+        ui.showMessage("Your wish is my command! I've added this task:\n " + task + "\nNow you have "
+                + tasks.size() + " tasks.");
     }
 
     /**
      * Retrieves the list of tasks.
      *
-     * @return An ArrayList containing all tasks.
+     * An ArrayList containing all tasks.
      */
-
     public void findTasks(String keyword, Ui ui) {
         if (keyword.isEmpty()) {
             ui.showError("Princess, please provide a keyword to search for.");

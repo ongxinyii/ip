@@ -1,5 +1,11 @@
 package pookie.task;
 
+/**
+ * Represents a ToDo task in Pookie.
+ * <p>
+ * A ToDo task is a simple task without a specific deadline or event timing.
+ * It contains only a description and a completion status.
+ */
 public class ToDo extends Task {
 
     /**
@@ -7,7 +13,7 @@ public class ToDo extends Task {
      *
      * @param description The description of the ToDo task.
      */
-    public ToDo (String description) {
+    public ToDo(String description) {
         super(description);
     }
 

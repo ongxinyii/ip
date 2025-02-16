@@ -1,18 +1,26 @@
 package pookie.command;
 
-import pookie.exception.PookieException;
-import pookie.list.TaskList;
-import pookie.storage.Storage;
-import pookie.task.*;
-import pookie.ui.Ui;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class Parser {
+import pookie.exception.PookieException;
+import pookie.list.TaskList;
+import pookie.storage.Storage;
+import pookie.task.Deadline;
+import pookie.task.Event;
+import pookie.task.Task;
+import pookie.task.TaskType;
+import pookie.task.ToDo;
+import pookie.ui.Ui;
 
+/**
+ * The {@code Parser} class is responsible for interpreting and executing user commands.
+ * It processes input strings, performs necessary actions on the task list, and interacts
+ * with the UI and storage components.
+ */
+public class Parser {
     /**
      * Parses and executes the user command.
      *
@@ -55,19 +63,54 @@ public class Parser {
             }
 
             switch (type) {
-                case TODO:
-                    handleTodo(tasks, parts.length > 1 ? parts[1].trim() : "", ui, storage);
-                    break;
-                case DEADLINE:
-                    handleDeadline(tasks, parts.length > 1 ? parts[1].trim() : "", ui, storage);
-                    break;
-                case EVENT:
-                    handleEvent(tasks, parts.length > 1 ? parts[1].trim() : "", ui, storage);
-                    break;
-                default:
-                    throw new PookieException("Sowwieeee (╥﹏╥) Pookie doesn't understand...");
+            case TODO:
+                handleTodo(tasks, parts.length > 1 ? parts[1].trim() : "", ui, storage);
+                break;
+            case DEADLINE:
+                handleDeadline(tasks, parts.length > 1 ? parts[1].trim() : "", ui, storage);
+                break;
+            case EVENT:
+                handleEvent(tasks, parts.length > 1 ? parts[1].trim() : "", ui, storage);
+                break;
+            default:
+                throw new PookieException("Sowwieeee (╥﹏╥) Pookie doesn't understand...");
             }
         }
+    }
+
+    /**
+     * Parses the user input command and returns the corresponding response from Pookie.
+     * Unlike {@code parseCommand}, this method does not terminate the application
+     * and instead returns a string response to be displayed in the GUI.
+     *
+     * @param input   The user input command.
+     * @param tasks   The current list of tasks.
+     * @param ui      The user interface for displaying messages.
+     * @param storage The storage handler for saving tasks.
+     * @return A string response representing the result of executing the command.
+     */
+    public static String parseCommandAndReturn(String input, TaskList tasks, Ui ui,
+                                               Storage storage) throws PookieException {
+        input = input.trim();
+        StringBuilder response = new StringBuilder();
+
+        if (input.equalsIgnoreCase("bye")) {
+            return "Bye Princess! Pookie hopes to see you again!";
+        } else if (input.equalsIgnoreCase("list")) {
+            response.append("Here are your tasks:\n").append(tasks.getTasks());
+        } else if (input.startsWith("mark ")) {
+            int index = Integer.parseInt(input.substring(5).trim()) - 1;
+            tasks.markTask(index, true, ui, storage);
+            response.append("Nice! I've marked this task as done.");
+        } else if (input.startsWith("unmark ")) {
+            int index = Integer.parseInt(input.substring(7).trim()) - 1;
+            tasks.markTask(index, false, ui, storage);
+            response.append("OK, I've unmarked this task.");
+        } else {
+            response.append("Pookie doesn't understand... (╥﹏╥)");
+        }
+
+        return response.toString();
     }
 
     /**
@@ -90,28 +133,41 @@ public class Parser {
 
         try {
             switch (type) {
-                case "T": // ToDo task
-                    ToDo todo = new ToDo(description);
-                    if (isDone) todo.markDone();
-                    return todo;
+            case "T": // ToDo task
+                ToDo todo = new ToDo(description);
+                if (isDone) {
+                    todo.markDone();
+                }
+                return todo;
 
-                case "D": // Deadline task
-                    if (parts.length < 4) throw new PookieException("Error: Missing deadline date.");
-                    LocalDateTime deadlineDate = LocalDateTime.parse(parts[3], DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                    Deadline deadline = new Deadline(description, deadlineDate);
-                    if (isDone) deadline.markDone();
-                    return deadline;
+            case "D": // Deadline task
+                if (parts.length < 4) {
+                    throw new PookieException("Error: Missing deadline date.");
+                }
+                LocalDateTime deadlineDate = LocalDateTime.parse(parts[3],
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                Deadline deadline = new Deadline(description, deadlineDate);
+                if (isDone) {
+                    deadline.markDone();
+                }
+                return deadline;
 
-                case "E": // Event task
-                    if (parts.length < 5) throw new PookieException("Error: Missing event start and end time.");
-                    LocalDateTime startDate = LocalDateTime.parse(parts[3], DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                    LocalDateTime endDate = LocalDateTime.parse(parts[4], DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-                    Event event = new Event(description, startDate, endDate);
-                    if (isDone) event.markDone();
-                    return event;
+            case "E": // Event task
+                if (parts.length < 5) {
+                    throw new PookieException("Error: Missing event start and end time.");
+                }
+                LocalDateTime startDate = LocalDateTime.parse(parts[3],
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                LocalDateTime endDate = LocalDateTime.parse(parts[4],
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                Event event = new Event(description, startDate, endDate);
+                if (isDone) {
+                    event.markDone();
+                }
+                return event;
 
-                default:
-                    throw new PookieException("Error: Unknown task type.");
+            default:
+                throw new PookieException("Error: Unknown task type.");
             }
         } catch (Exception e) {
             throw new PookieException("Error parsing task: " + e.getMessage());
@@ -135,18 +191,21 @@ public class Parser {
     private static void handleDeadline(TaskList tasks, String details, Ui ui, Storage storage) throws PookieException {
         String[] parts = details.split(" /by ");
         if (parts[0].trim().isEmpty()) {
-            throw new PookieException.EmptyDescriptionException("Princess, the description of a deadline cannot be empty.");
+            throw new PookieException.EmptyDescriptionException("Princess, "
+                    + "the description of a deadline cannot be empty.");
         }
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw new PookieException.MissingKeywordException("Princess, the deadline must have a /by date.");
         }
 
         try {
-            LocalDateTime deadlineDate = LocalDateTime.parse(parts[1].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+            LocalDateTime deadlineDate = LocalDateTime.parse(parts[1].trim(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
             Deadline deadlineTask = new Deadline(parts[0].trim(), deadlineDate);
             tasks.addTask(deadlineTask, ui, storage);
         } catch (DateTimeParseException e) {
-            ui.showError("OOPS!!! Princess, please enter the deadline in the correct format: yyyy-MM-dd HHmm (e.g., 2025-01-31 1500).");
+            ui.showError("OOPS!!! Princess, please enter the deadline in the correct format: yyyy-MM-dd HHmm "
+                    + "(e.g., 2025-01-31 1500).");
         }
     }
 
@@ -156,19 +215,23 @@ public class Parser {
     private static void handleEvent(TaskList tasks, String details, Ui ui, Storage storage) throws PookieException {
         String[] parts = details.split(" /from | /to ");
         if (parts[0].trim().isEmpty()) {
-            throw new PookieException.EmptyDescriptionException("Princess, the description of an event cannot be empty.");
+            throw new PookieException.EmptyDescriptionException("Princess, "
+                    + "the description of an event cannot be empty.");
         }
         if (parts.length < 3 || parts[1].trim().isEmpty() || parts[2].trim().isEmpty()) {
             throw new PookieException.MissingKeywordException("Princess, an event must have /from and /to times.");
         }
 
         try {
-            LocalDateTime startDate = LocalDateTime.parse(parts[1].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-            LocalDateTime endDate = LocalDateTime.parse(parts[2].trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+            LocalDateTime startDate = LocalDateTime.parse(parts[1].trim(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+            LocalDateTime endDate = LocalDateTime.parse(parts[2].trim(),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
             Event eventTask = new Event(parts[0].trim(), startDate, endDate);
             tasks.addTask(eventTask, ui, storage);
         } catch (DateTimeParseException e) {
-            ui.showError("⚠️ OOPS!!! Princess, please enter event times in the correct format: yyyy-MM-dd HHmm (e.g., 2025-02-01 1800).");
+            ui.showError("⚠️ OOPS!!! Princess, please enter event times in the correct format: "
+                    + "yyyy-MM-dd HHmm (e.g., 2025-02-01 1800).");
         }
     }
 
@@ -178,7 +241,8 @@ public class Parser {
     private static void handleListByDate(TaskList tasks, String dateStr, Ui ui) {
         try {
             LocalDate searchDate = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            ui.showMessage("Here are the tasks on " + searchDate.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ":");
+            ui.showMessage("Here are the tasks on " + searchDate.format(DateTimeFormatter.ofPattern("MMM dd yyyy"))
+                    + ":");
 
             for (Task task : tasks.getTasks()) {
                 if (task instanceof Deadline) {
