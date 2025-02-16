@@ -12,7 +12,7 @@ import pookie.ui.Ui;
  * Provides methods to add, delete, mark/unmark, print, and search for tasks.
  */
 public class TaskList {
-    private ArrayList<Task> tasks;
+    private final ArrayList<Task> tasks;
 
     /**
      * Constructs an empty TaskList.
@@ -23,68 +23,24 @@ public class TaskList {
 
     /**
      * Constructs a TaskList with a given list of tasks.
-     *
-     * @param tasks An ArrayList containing existing tasks.
      */
     public TaskList(ArrayList<Task> tasks) {
-        this.tasks = tasks;
+        this.tasks = tasks != null ? tasks : new ArrayList<>();
     }
 
     /**
      * Prints the list of tasks.
-     *
-     * @param ui The UI instance to display the task list.
      */
     public void printTasks(Ui ui) {
         if (tasks.isEmpty()) {
             ui.showMessage("Princess, there are no tasks added yet.");
             return;
         }
-        StringBuilder sb = new StringBuilder("Here are the tasks in your list:");
+        StringBuilder taskList = new StringBuilder("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            sb.append("\n").append(i + 1).append(". ").append(tasks.get(i));
+            taskList.append("\n").append(i + 1).append(". ").append(tasks.get(i));
         }
-        ui.showMessage(sb.toString());
-    }
-
-    /**
-     * Marks or unmarks a task as done based on the given index.
-     *
-     * @param index The index of the task to be marked/unmarked.
-     * @param isDone A boolean indicating whether to mark (true) or unmark (false) the task.
-     * @param ui The UI instance to display feedback.
-     * @param storage The storage instance to update the saved tasks.
-     * @throws PookieException If the given index is invalid.
-     */
-    public void markTask(int index, boolean isDone, Ui ui, Storage storage) throws PookieException {
-        if (index < 0 || index >= tasks.size()) {
-            throw new PookieException("Princess, there is no such task!");
-        }
-        if (isDone) {
-            tasks.get(index).markDone();
-        } else {
-            tasks.get(index).markNotDone();
-        }
-        storage.saveTasks(tasks);
-        ui.showMessage(isDone ? "Nice! I've marked this task as done:" : "OK, I've unmarked this task:");
-        ui.showMessage(tasks.get(index).toString());
-    }
-
-    /**
-     * Deletes a task from the list based on the given index.
-     *
-     * @param index The index of the task to be deleted.
-     * @param ui The UI instance to display feedback.
-     * @param storage The storage instance to update the saved tasks.
-     * @throws PookieException If the given index is invalid.
-     */
-    public void deleteTask(int index, Ui ui, Storage storage) throws PookieException {
-        if (index < 0 || index >= tasks.size()) {
-            throw new PookieException("Princess, there is no such task to delete!");
-        }
-        Task removedTask = tasks.remove(index);
-        storage.saveTasks(tasks);
-        ui.showMessage("Okies! I've removed this task:\n" + removedTask);
+        ui.showMessage(taskList.toString());
     }
 
     /**
@@ -103,8 +59,43 @@ public class TaskList {
     }
 
     /**
+     * Marks or unmarks a task.
+     */
+    public void markTask(int index, boolean isDone, Ui ui, Storage storage) throws PookieException {
+        validateTaskIndex(index);
+
+        if (isDone) {
+            tasks.get(index).markDone();
+        } else {
+            tasks.get(index).markNotDone();
+        }
+
+        storage.saveTasks(tasks);
+        ui.showMessage(isDone ? "Nice! I've marked this task as done:" : "OK, I've unmarked this task:");
+        ui.showMessage(tasks.get(index).toString());
+    }
+
+    /**
+     * Deletes a task.
+     */
+    public void deleteTask(int index, Ui ui, Storage storage) throws PookieException {
+        validateTaskIndex(index);
+        Task removedTask = tasks.remove(index);
+        storage.saveTasks(tasks);
+        ui.showMessage("Okies! I've removed this task:\n" + removedTask);
+    }
+
+    /**
+     * Validates task index.
+     */
+    private void validateTaskIndex(int index) throws PookieException {
+        if (index < 0 || index >= tasks.size()) {
+            throw new PookieException("Princess, there is no such task!");
+        }
+    }
+
+    /**
      * Retrieves the list of tasks.
-     *
      * An ArrayList containing all tasks.
      */
     public void findTasks(String keyword, Ui ui) {

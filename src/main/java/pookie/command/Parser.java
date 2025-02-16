@@ -11,7 +11,6 @@ import pookie.storage.Storage;
 import pookie.task.Deadline;
 import pookie.task.Event;
 import pookie.task.Task;
-import pookie.task.TaskType;
 import pookie.task.ToDo;
 import pookie.ui.Ui;
 
@@ -31,50 +30,94 @@ public class Parser {
      * @throws PookieException If an invalid command is encountered.
      */
     public static void parseCommand(String input, TaskList tasks, Ui ui, Storage storage) throws PookieException {
+        assert input != null : "Input command should not be null";
+        assert tasks != null : "TaskList instance should not be null";
+        assert ui != null : "UI instance should not be null";
+        assert storage != null : "Storage instance should not be null";
+
         input = input.trim();
 
-        if (input.equalsIgnoreCase("bye")) {
+        if (isSimpleCommand(input, tasks, ui)) {
+            return;
+        }
+
+        String[] parts = input.split(" ", 2);
+        String command = parts[0].trim().toLowerCase();
+        String argument = parts.length > 1 ? parts[1].trim() : "";
+
+        executeCommand(command, argument, tasks, ui, storage);
+    }
+
+    private static boolean isSimpleCommand(String input, TaskList tasks, Ui ui) {
+        switch (input.toLowerCase()) {
+        case "bye":
             ui.showGoodbye();
             System.exit(0);
-        } else if (input.equalsIgnoreCase("list")) {
-            tasks.printTasks(ui);
-        } else if (input.startsWith("mark ")) {
-            int index = Integer.parseInt(input.substring(5).trim()) - 1;
-            tasks.markTask(index, true, ui, storage);
-        } else if (input.startsWith("unmark ")) {
-            int index = Integer.parseInt(input.substring(7).trim()) - 1;
-            tasks.markTask(index, false, ui, storage);
-        } else if (input.startsWith("delete ")) {
-            int index = Integer.parseInt(input.substring(7).trim()) - 1;
-            tasks.deleteTask(index, ui, storage);
-        } else if (input.startsWith("list on ")) {
-            handleListByDate(tasks, input.substring(8).trim(), ui);
-        } else if (input.startsWith("find ")) {
-            String keyword = input.substring(5).trim();
-            tasks.findTasks(keyword, ui);
-        } else {
-            String[] parts = input.split(" ", 2);
-            TaskType type;
+            return true;
+        case "list":
+            ui.showMessage("Here are your tasks:\n" + tasks.getTasks());
+            return true;
+        default:
+            return false;
+        }
+    }
 
-            try {
-                type = TaskType.valueOf(parts[0].toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new PookieException("Sowwieeee (╥﹏╥) Pookie doesn't understand...");
-            }
+    private static void executeCommand(String command, String argument, TaskList tasks, Ui ui, Storage storage) throws
+            PookieException {
+        switch (command) {
+        case "mark":
+            handleMarking(argument, tasks, ui, storage, true);
+            break;
+        case "unmark":
+            handleMarking(argument, tasks, ui, storage, false);
+            break;
+        case "delete":
+            handleDeletion(argument, tasks, ui, storage);
+            break;
+        case "list on":
+            handleListByDate(tasks, argument, ui);
+            break;
+        case "find":
+            tasks.findTasks(argument, ui);
+            break;
+        case "todo":
+            handleTodo(tasks, argument, ui, storage);
+            break;
+        case "deadline":
+            handleDeadline(tasks, argument, ui, storage);
+            break;
+        case "event":
+            handleEvent(tasks, argument, ui, storage);
+            break;
+        default:
+            throw new PookieException("Sowwieeee (╥﹏╥) Pookie doesn't understand...");
+        }
+    }
 
-            switch (type) {
-            case TODO:
-                handleTodo(tasks, parts.length > 1 ? parts[1].trim() : "", ui, storage);
-                break;
-            case DEADLINE:
-                handleDeadline(tasks, parts.length > 1 ? parts[1].trim() : "", ui, storage);
-                break;
-            case EVENT:
-                handleEvent(tasks, parts.length > 1 ? parts[1].trim() : "", ui, storage);
-                break;
-            default:
-                throw new PookieException("Sowwieeee (╥﹏╥) Pookie doesn't understand...");
+    private static void handleMarking(String argument, TaskList tasks, Ui ui, Storage storage, boolean isMark)
+            throws PookieException {
+        int index = parseIndex(argument, tasks);
+        tasks.markTask(index, isMark, ui, storage);
+        ui.showMessage((isMark ? "Nice! I've marked this task as done:\n" : "OK, I've unmarked this task:\n")
+                + tasks.getTasks().get(index));
+    }
+
+    private static void handleDeletion(String argument, TaskList tasks, Ui ui, Storage storage) throws PookieException {
+        int index = parseIndex(argument, tasks);
+        Task removedTask = tasks.getTasks().get(index);
+        tasks.deleteTask(index, ui, storage);
+        ui.showMessage("OK! I've removed this task:\n" + removedTask);
+    }
+
+    private static int parseIndex(String argument, TaskList tasks) throws PookieException {
+        try {
+            int index = Integer.parseInt(argument.trim()) - 1;
+            if (index < 0 || index >= tasks.getTasks().size()) {
+                throw new PookieException("Oops! Please provide a valid task number.");
             }
+            return index;
+        } catch (NumberFormatException e) {
+            throw new PookieException("Oops! Please enter a valid number.");
         }
     }
 
@@ -89,24 +132,79 @@ public class Parser {
      * @param storage The storage handler for saving tasks.
      * @return A string response representing the result of executing the command.
      */
-    public static String parseCommandAndReturn(String input, TaskList tasks, Ui ui,
-                                               Storage storage) throws PookieException {
+    public static String parseCommandAndReturn(String input, TaskList tasks, Ui ui, Storage storage)
+            throws PookieException {
+        assert input != null : "Input command should not be null";
+        assert tasks != null : "TaskList instance should not be null";
+        assert ui != null : "UI instance should not be null";
+        assert storage != null : "Storage instance should not be null";
+
         input = input.trim();
+
+        String simpleResponse = isSimpleCommandAndReturn(input, tasks, ui);
+        if (simpleResponse != null) {
+            return simpleResponse;
+        }
+
+        String[] parts = input.split(" ", 2);
+        String command = parts[0].trim().toLowerCase();
+        String argument = parts.length > 1 ? parts[1].trim() : "";
+
+        return executeCommandAndReturn(command, argument, tasks, ui, storage);
+    }
+
+    private static String isSimpleCommandAndReturn(String input, TaskList tasks, Ui ui) {
+        switch (input.toLowerCase()) {
+        case "bye":
+            return "Bye Princess! Pookie hopes to see you again!";
+        case "list":
+            return "Here are your tasks:\n" + tasks.getTasks();
+        default:
+            return null; // Indicating this is not a simple command
+        }
+    }
+
+    private static String executeCommandAndReturn(String command, String argument, TaskList tasks,
+                                                  Ui ui, Storage storage) throws PookieException {
         StringBuilder response = new StringBuilder();
 
-        if (input.equalsIgnoreCase("bye")) {
-            return "Bye Princess! Pookie hopes to see you again!";
-        } else if (input.equalsIgnoreCase("list")) {
-            response.append("Here are your tasks:\n").append(tasks.getTasks());
-        } else if (input.startsWith("mark ")) {
-            int index = Integer.parseInt(input.substring(5).trim()) - 1;
-            tasks.markTask(index, true, ui, storage);
+        switch (command) {
+        case "mark":
+            handleMarking(argument, tasks, ui, storage, true);
             response.append("Nice! I've marked this task as done.");
-        } else if (input.startsWith("unmark ")) {
-            int index = Integer.parseInt(input.substring(7).trim()) - 1;
-            tasks.markTask(index, false, ui, storage);
+            break;
+        case "unmark":
+            handleMarking(argument, tasks, ui, storage, false);
             response.append("OK, I've unmarked this task.");
-        } else {
+            break;
+        case "delete":
+            handleDeletion(argument, tasks, ui, storage);
+            response.append("OK! I've removed this task.");
+            break;
+        case "list on":
+            handleListByDate(tasks, argument, ui);
+            response.append("Listed tasks for " + argument + ".");
+            break;
+        case "find":
+            tasks.findTasks(argument, ui);
+            response.append("Searching for tasks with keyword: " + argument);
+            break;
+        case "todo":
+            handleTodo(tasks, argument, ui, storage);
+            response.append("Got it! I've added this task:\n")
+                    .append(tasks.getTasks().get(tasks.getTasks().size() - 1));
+            break;
+        case "deadline":
+            handleDeadline(tasks, argument, ui, storage);
+            response.append("Got it! I've added this task:\n")
+                    .append(tasks.getTasks().get(tasks.getTasks().size() - 1));
+            break;
+        case "event":
+            handleEvent(tasks, argument, ui, storage);
+            response.append("Got it! I've added this task:\n")
+                    .append(tasks.getTasks().get(tasks.getTasks().size() - 1));
+            break;
+        default:
             response.append("Pookie doesn't understand... (╥﹏╥)");
         }
 
