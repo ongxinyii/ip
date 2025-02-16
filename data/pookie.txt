@@ -1,10 +1,12 @@
 E | 1 | crying | 2025-01-31 1630 | 2025-01-31 1700
 E | 0 | sleep | 2025-01-31 2300 | 2025-02-01 0800
-D | 1 | get better | 2025-01-31 2359
-T | 1 | buy clothes
-T | 0 | clothes buyer
+D | 0 | get better | 2025-01-31 2359
+T | 1 | clothes buyer
 D | 0 | quiz | 2025-02-02 2359
 E | 0 | sleep | 2025-02-02 2359 | 2025-02-03 0800
-T | 0 | bat
 D | 0 | mission | 2025-02-16 2359
 E | 0 | lunch | 2025-02-16 1200 | 2025-02-15 1230
+F | 0 | shower | 2
+T | 0 | buy pineapple
+D | 0 | ip project | 2025-02-21 2359
+E | 0 | presentation | 2025-02-21 2300 | 2025-02-21 2359

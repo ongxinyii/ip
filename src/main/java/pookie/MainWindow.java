@@ -46,6 +46,12 @@ public class MainWindow extends AnchorPane {
     public void setPookie(Pookie p) {
         assert p != null : "Pookie instance should not be null";
         pookie = p;
+
+        // Display welcome message when the chatbot starts
+        String greeting = "Hello your highness! I'm Pookie\n⸜(｡˃ ᵕ ˂ )⸝♡\nWhat can I do for you?";
+        dialogContainer.getChildren().add(
+                DialogBox.getPookieDialog(greeting, pookieImage)
+        );
     }
 
     /**

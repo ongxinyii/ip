@@ -13,5 +13,6 @@ package pookie.task;
 public enum TaskType {
     TODO,
     DEADLINE,
-    EVENT
+    EVENT,
+    FIXED_DURATION
 }
