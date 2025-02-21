@@ -52,11 +52,11 @@ application {
 }
 
 shadowJar {
-    archiveBaseName = "pookie"
+    archiveBaseName = "pookie.jar"
     archiveClassifier = ""
-    archiveVersion.set("1.0")
+    archiveVersion.set("1.1")
 }
 
-run{
+run {
     standardInput = System.in
 }

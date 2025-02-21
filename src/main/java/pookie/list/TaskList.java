@@ -106,22 +106,30 @@ public class TaskList {
             return;
         }
 
+        ArrayList<Task> matchingTasks = findTasksReturn(keyword);
+
+        if (matchingTasks.isEmpty()) {
+            ui.showMessage("Princess, no matching tasks found for '" + keyword + "' 😢");
+        } else {
+            StringBuilder result = new StringBuilder("Here are the matching tasks in your list: ✨\n");
+            for (int i = 0; i < matchingTasks.size(); i++) {
+                result.append("\n").append(i + 1).append(". ").append(matchingTasks.get(i));
+            }
+            ui.showMessage(result.toString());
+        }
+    }
+
+    /**
+     * Returns a list of matching tasks based on the keyword.
+     */
+    public ArrayList<Task> findTasksReturn(String keyword) {
         ArrayList<Task> matchingTasks = new ArrayList<>();
         for (Task task : tasks) {
-            if (task.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+            if (task.getDescription().toLowerCase().contains(keyword.toLowerCase())) { // ✅ Case-insensitive
                 matchingTasks.add(task);
             }
         }
-
-        if (matchingTasks.isEmpty()) {
-            ui.showError("Princess, there are no matching tasks in your list.");
-        } else {
-            StringBuilder sb = new StringBuilder("Here are the matching tasks in your list ˚ʚ♡ɞ˚ :\n");
-            for (int i = 0; i < matchingTasks.size(); i++) {
-                sb.append("\n").append(i + 1).append(". ").append(matchingTasks.get(i));
-            }
-            ui.showMessage(sb.toString());
-        }
+        return matchingTasks;
     }
 
     public ArrayList<Task> getTasks() {
