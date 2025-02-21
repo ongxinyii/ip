@@ -47,6 +47,7 @@ public class Pookie {
      */
     public Pookie() {
         this(DEFAULT_FILE_PATH);
+        ui.showWelcome();
     }
 
     /**

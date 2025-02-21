@@ -37,9 +37,10 @@ public class TaskList {
             ui.showMessage("Princess, there are no tasks added yet.");
             return;
         }
-        StringBuilder taskList = new StringBuilder("Here are the tasks in your list:");
+        StringBuilder taskList = new StringBuilder("Here are the tasks in your list, Your Highness! \n");
+
         for (int i = 0; i < tasks.size(); i++) {
-            taskList.append("\n").append(i + 1).append(". ").append(tasks.get(i));
+            taskList.append("\n").append(i + 1).append(". ").append(tasks.get(i)).append("\n");
         }
         ui.showMessage(taskList.toString());
     }

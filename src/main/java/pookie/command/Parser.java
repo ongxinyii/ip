@@ -10,6 +10,7 @@ import pookie.list.TaskList;
 import pookie.storage.Storage;
 import pookie.task.Deadline;
 import pookie.task.Event;
+import pookie.task.FixedDurationTask;
 import pookie.task.Task;
 import pookie.task.ToDo;
 import pookie.ui.Ui;
@@ -55,7 +56,7 @@ public class Parser {
             System.exit(0);
             return true;
         case "list":
-            ui.showMessage("Here are your tasks:\n" + tasks.getTasks());
+            tasks.printTasks(ui);
             return true;
         default:
             return false;
@@ -89,8 +90,38 @@ public class Parser {
         case "event":
             handleEvent(tasks, argument, ui, storage);
             break;
+        case "fixed_duration":
+            handleFixedDurationTask(tasks, argument, ui, storage);
+            break;
         default:
             throw new PookieException("Sowwieeee (╥﹏╥) Pookie doesn't understand...");
+        }
+    }
+
+    private static void handleFixedDurationTask(TaskList tasks, String details, Ui ui, Storage storage)
+            throws PookieException {
+        if (details.isEmpty()) {
+            throw new PookieException.EmptyDescriptionException("Princess, the description of a "
+                    + "fixed duration task cannot be empty.");
+        }
+
+        String[] parts = details.split(" /duration ");
+
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            throw new PookieException.MissingKeywordException("Princess, you must specify the duration using "
+                    + "'/duration X' (e.g., 'shower /duration 1').");
+        }
+
+        try {
+            int duration = Integer.parseInt(parts[1].trim());
+            if (duration <= 0) {
+                throw new PookieException("Princess, duration must be a positive number greater than 0.");
+            }
+
+            FixedDurationTask task = new FixedDurationTask(parts[0].trim(), duration);
+            tasks.addTask(task, ui, storage);
+        } catch (NumberFormatException e) {
+            throw new PookieException("Princess, duration must be a valid number (e.g., 2 for 2 hours).");
         }
     }
 
@@ -158,7 +189,12 @@ public class Parser {
         case "bye":
             return "Bye Princess! Pookie hopes to see you again!";
         case "list":
-            return "Here are your tasks:\n" + tasks.getTasks();
+            StringBuilder response = new StringBuilder();
+            response.append("Here are your tasks, Your Highness!\n");
+            for (int i = 0; i < tasks.getTasks().size(); i++) {
+                response.append("\n").append(i + 1).append(". ").append(tasks.getTasks().get(i)).append("\n");
+            }
+            return response.toString();
         default:
             return null; // Indicating this is not a simple command
         }
@@ -204,10 +240,14 @@ public class Parser {
             response.append("Got it! I've added this task:\n")
                     .append(tasks.getTasks().get(tasks.getTasks().size() - 1));
             break;
+        case "fixed_duration":
+            handleFixedDurationTask(tasks, argument, ui, storage);
+            response.append("Got it! I've added this task:\n")
+                    .append(tasks.getTasks().get(tasks.getTasks().size() - 1));
+            break;
         default:
             response.append("Pookie doesn't understand... (╥﹏╥)");
         }
-
         return response.toString();
     }
 
@@ -265,6 +305,17 @@ public class Parser {
                     event.markDone();
                 }
                 return event;
+
+            case "F":
+                if (parts.length < 4) {
+                    throw new PookieException("Error: Missing duration for Fixed Duration Task.");
+                }
+                int duration = Integer.parseInt(parts[3]);
+                FixedDurationTask fixedTask = new FixedDurationTask(description, duration);
+                if (isDone) {
+                    fixedTask.markDone();
+                }
+                return fixedTask;
 
             default:
                 throw new PookieException("Error: Unknown task type.");
