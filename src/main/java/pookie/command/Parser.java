@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 import pookie.exception.PookieException;
 import pookie.list.TaskList;
@@ -75,7 +76,13 @@ public class Parser {
         case "delete":
             handleDeletion(argument, tasks, ui, storage);
             break;
+        case "list":
+            tasks.printTasks(ui);
+            break;
         case "list on":
+            if (argument.isEmpty()) {
+                throw new PookieException("Princess, please specify a date in YYYY-MM-DD format.");
+            }
             handleListByDate(tasks, argument, ui);
             break;
         case "find":
@@ -177,10 +184,17 @@ public class Parser {
             return simpleResponse;
         }
 
-        String[] parts = input.split(" ", 2);
-        String command = parts[0].trim().toLowerCase();
-        String argument = parts.length > 1 ? parts[1].trim() : "";
+        String command;
+        String argument;
 
+        if (input.startsWith("list on ")) {
+            command = "list on";
+            argument = input.substring(8).trim(); // Extracts the date part after "list on "
+        } else {
+            String[] parts = input.split(" ", 2);
+            command = parts[0].trim().toLowerCase();
+            argument = parts.length > 1 ? parts[1].trim() : "";
+        }
         return executeCommandAndReturn(command, argument, tasks, ui, storage);
     }
 
@@ -217,13 +231,38 @@ public class Parser {
             handleDeletion(argument, tasks, ui, storage);
             response.append("OK! I've removed this task.");
             break;
-        case "list on":
-            handleListByDate(tasks, argument, ui);
-            response.append("Listed tasks for " + argument + ".");
-            break;
+        case "list":
+            if (argument.startsWith("on ")) {
+                String dateArgument = argument.substring(3).trim(); // Remove "on " prefix
+                if (dateArgument.isEmpty()) {
+                    return "Princess, please specify a date in YYYY-MM-DD format.";
+                }
+                return getTasksForDate(tasks, dateArgument);
+            } else {
+                return isSimpleCommandAndReturn("list", tasks, ui); // Default to listing all tasks
+            }
         case "find":
-            tasks.findTasks(argument, ui);
-            response.append("Searching for tasks with keyword: " + argument);
+            String keyword = argument.trim();
+            StringBuilder searchResult = new StringBuilder("Searching for tasks with keyword: " + keyword + "\n");
+
+            ArrayList<Task> matches = tasks.findTasksReturn(keyword); // ✅ Use the new return method
+
+            if (matches.isEmpty()) {
+                searchResult.append("Princess, no matching tasks found for '" + keyword + "' 😢");
+            } else {
+                searchResult.append("Here are the matching tasks in your list: ✨\n");
+                for (int i = 0; i < matches.size(); i++) {
+                    searchResult.append("\n").append(i + 1).append(". ").append(matches.get(i));
+                }
+            }
+            response.append(searchResult);
+            break;
+        case "list on":
+            if (argument.isEmpty()) {
+                response.append("Princess, please specify a date in YYYY-MM-DD format.");
+            } else {
+                response.append(getTasksForDate(tasks, argument));
+            }
             break;
         case "todo":
             handleTodo(tasks, argument, ui, storage);
@@ -391,23 +430,55 @@ public class Parser {
      */
     private static void handleListByDate(TaskList tasks, String dateStr, Ui ui) {
         try {
-            LocalDate searchDate = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            ui.showMessage("Here are the tasks on " + searchDate.format(DateTimeFormatter.ofPattern("MMM dd yyyy"))
-                    + ":");
+            LocalDate searchDate = LocalDate.parse(dateStr.trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            StringBuilder response = new StringBuilder("Here are the tasks on ")
+                    .append(searchDate.format(DateTimeFormatter.ofPattern("MMM dd yyyy"))).append(":\n");
 
+            boolean hasTasks = false;
             for (Task task : tasks.getTasks()) {
-                if (task instanceof Deadline) {
-                    if (((Deadline) task).getByDate().toLocalDate().equals(searchDate)) {
-                        ui.showMessage(" " + task);
-                    }
-                } else if (task instanceof Event) {
-                    if (((Event) task).getStartDate().toLocalDate().equals(searchDate)) {
-                        ui.showMessage(" " + task);
-                    }
+                if (task instanceof Deadline && ((Deadline) task).getByDate().toLocalDate().equals(searchDate)) {
+                    response.append("\n- ").append(task);
+                    hasTasks = true;
+                } else if (task instanceof Event && ((Event) task).getStartDate().toLocalDate().equals(searchDate)) {
+                    response.append("\n- ").append(task);
+                    hasTasks = true;
                 }
             }
-        } catch (Exception e) {
-            ui.showError("Princess, please enter the date in the correct format: yyyy-MM-dd (e.g., 2019-12-02).");
+
+            if (!hasTasks) {
+                response.append("\nNo tasks found for this date, Princess! ❌");
+            }
+            ui.showMessage(response.toString());
+
+        } catch (DateTimeParseException e) {
+            ui.showError("Princess, please enter the date in the correct format: YYYY-MM-DD (e.g., 2025-02-21).");
+        }
+    }
+
+    private static String getTasksForDate(TaskList tasks, String dateStr) {
+        try {
+            LocalDate searchDate = LocalDate.parse(dateStr.trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            StringBuilder response = new StringBuilder("Here are the tasks on ")
+                    .append(searchDate.format(DateTimeFormatter.ofPattern("MMM dd yyyy"))).append(":\n");
+
+            boolean hasTasks = false;
+            for (Task task : tasks.getTasks()) {
+                if (task instanceof Deadline && ((Deadline) task).getByDate().toLocalDate().equals(searchDate)) {
+                    response.append("\n- ").append(task);
+                    hasTasks = true;
+                } else if (task instanceof Event && ((Event) task).getStartDate().toLocalDate().equals(searchDate)) {
+                    response.append("\n- ").append(task);
+                    hasTasks = true;
+                }
+            }
+
+            if (!hasTasks) {
+                response.append("\nNo tasks found for this date, Princess! ❌");
+            }
+            return response.toString();
+
+        } catch (DateTimeParseException e) {
+            return "Princess, please enter the date in the correct format: YYYY-MM-DD (e.g., 2025-10-27).";
         }
     }
 }
