@@ -18,53 +18,59 @@ todo TASK_DESCRIPTION
 Example:
 todo Buy groceries
 
-3. Deadline Task (tasks with a due date and time):
+2. Deadline Task (tasks with a due date and time):
 deadline TASK_DESCRIPTION /by YYYY-MM-DD HHmm
 Example:
 deadline Submit report /by 2025-02-28 2359
 
-5. Event Task (tasks with a start and end time):
+3. Event Task (tasks with a start and end time):
 event TASK_DESCRIPTION /from YYYY-MM-DD HHmm /to YYYY-MM-DD HHmm
 Example:
 event Project meeting /from 2025-03-01 1400 /to 2025-03-01 1600
 
-7. Listing All Tasks:
+4. Fixed Duration Task (tasks with a fixed duration to complete):
+fixed_duration TASK_DESCRIPTION /duration H
+Example (note that H is in hours):
+fixed_duration do homework /duration 3
+
+5. Listing All Tasks:
 list
 Displays all tasks currently stored in Pookie.
-8. Marking a Task as Done or Not Done: mark, unmark
+
+6. Marking a Task as Done or Not Done: mark, unmark
 Mark a task as done:
 mark TASK_INDEX
 Example:
 mark 2
 
-10. Unmark a task (set as not done):
+7. Unmark a task (set as not done):
 unmark TASK_INDEX
 Example:
 unmark 2
 
-12. Finding a Task: find
+8. Finding a Task: find
 Search for tasks by keyword.
 find KEYWORD
 Example:
 find report
 This command will return all tasks that contain the word "report."
 
-14. Deleting a Task: delete
+9. Deleting a Task: delete
 Deletes a task at the specified index.
 delete TASK_INDEX
 Example:
 delete 3
 This deletes the third task in the current list.
 
-15. Exiting Pookie: bye
+10. Exiting Pookie: bye
 Closes the application.
 
-16. Saving Tasks
+11. Saving Tasks
 Pookie automatically saves your tasks locally after every change. Your tasks are stored in a file at:
 [data/pookie.txt]
 You do not need to manually save your tasks.
 
-17. Editing the Data File
+12. Editing the Data File
 Pookie stores data as a plain text file at:
 [data/pookie.txt]
 You can manually edit this file, but be careful to maintain the correct format. Incorrect modifications may cause data loss or unexpected behavior.
@@ -82,16 +88,3 @@ Pookie will generate a new, empty task list. If you need to recover tasks, resto
 
 Q: Can I edit the task file manually?
 Yes, but be careful. Any incorrect formatting may result in unexpected issuess.
-
-|             Command Summary             |
-|_________________________________________|
-| Action	Command |        Format         |
-|    Add ToDo     | todo TASK_DESCRIPTION |
-|   Add Deadline	| deadline TASK_DESCRIPTION /by YYYY-MM-DD HHmm |
-| Add Event	| event TASK_DESCRIPTION /from YYYY-MM-DD HHmm /to YYYY-MM-DD HHmm|
-| List Tasks	|             list            |
-| Mark Task Done	|      mark TASK_INDEX    |
-| Unmark Task	|        unmark TASK_INDEX    |
-| Find Task	 |          find KEYWORD        |
-| Delete Task	|      delete TASK_INDEX      |
-| Exit App	|             bye               |
