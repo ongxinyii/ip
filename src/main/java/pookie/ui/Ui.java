@@ -22,7 +22,6 @@ public class Ui {
      * Displays the welcome message when the program starts.
      */
     public void showWelcome() {
-        //printBorder();
         System.out.println("Hello your highness! I'm Pookie\n⸜(｡˃ ᵕ ˂ )⸝♡\nWhat can I do for you?");
         printBorder();
     }
@@ -40,9 +39,7 @@ public class Ui {
      * Displays the goodbye message when the program ends.
      */
     public void showGoodbye() {
-        //printBorder();
         System.out.println("Bye Princess! দ্দি(˵ •̀ ᴗ - ˵ ) ✧\nPookie hopes to see you again!");
-        printBorder();
     }
 
     /**
@@ -80,7 +77,7 @@ public class Ui {
     }
 
     /**
-     * Prints a horizontal border line for message separation.
+     * Prints a horizontal borderline for message separation.
      */
     private void printBorder() {
         System.out.println("____________________________________________________________");

@@ -1,6 +1,8 @@
-D | 0 | homework | 2025-10-27 2359
-F | 0 | run | 3
-T | 0 | material acquisition
-D | 0 | do homework | 2025-02-22 1200
-E | 0 | lunch | 2025-02-22 1200 | 2025-02-22 1300
-F | 0 | dumb shit | 5
+T | 0 | buy food
+D | 0 | ip project | 2025-02-24 2359
+E | 0 | work | 2025-02-25 0830 | 2025-02-25 1800
+F | 0 | do homework | 4
+T | 0 | work
+E | 0 | meeting | 2025-06-23 1234 | 2025-06-23 2345
+D | 0 | submit assignment | 2023-04-23 1234
+F | 0 | shower | 1

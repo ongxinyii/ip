@@ -113,22 +113,22 @@ public class Parser {
         }
 
         String[] parts = details.split(" /duration ");
-
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw new PookieException.MissingKeywordException("Princess, you must specify the duration using "
-                    + "'/duration X' (e.g., 'shower /duration 1').");
+            throw new PookieException.MissingKeywordException("Princess, you must specify the duration using:\n"
+                    + "⏳ Format: '/duration X' (e.g., 'shower /duration 1')");
         }
 
         try {
             int duration = Integer.parseInt(parts[1].trim());
             if (duration <= 0) {
-                throw new PookieException("Princess, duration must be a positive number greater than 0.");
+                throw new PookieException("Princess, duration must be a **positive** number greater than **0**.");
             }
 
+            // Create fixed duration task
             FixedDurationTask task = new FixedDurationTask(parts[0].trim(), duration);
             tasks.addTask(task, ui, storage);
         } catch (NumberFormatException e) {
-            throw new PookieException("Princess, duration must be a valid number (e.g., 2 for 2 hours).");
+            ui.showError("⚠️ OOPS!!! Princess, the duration must be a valid **number** (e.g., '3' for 3 hours).");
         }
     }
 
@@ -379,49 +379,59 @@ public class Parser {
      * Handles creation of a Deadline task.
      */
     private static void handleDeadline(TaskList tasks, String details, Ui ui, Storage storage) throws PookieException {
-        String[] parts = details.split(" /by ");
-        if (parts[0].trim().isEmpty()) {
-            throw new PookieException.EmptyDescriptionException("Princess, "
-                    + "the description of a deadline cannot be empty.");
+        if (details.isEmpty()) {
+            throw new PookieException.EmptyDescriptionException("Princess, the description of a "
+                    + "deadline cannot be empty.");
         }
+
+        String[] parts = details.split(" /by ");
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw new PookieException.MissingKeywordException("Princess, the deadline must have a /by date.");
+            throw new PookieException.MissingKeywordException("Princess, the deadline must have a valid /by date.");
         }
 
         try {
-            LocalDateTime deadlineDate = LocalDateTime.parse(parts[1].trim(),
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+            // Validate date format
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+            LocalDateTime deadlineDate = LocalDateTime.parse(parts[1].trim(), formatter);
+
+            // Create deadline task
             Deadline deadlineTask = new Deadline(parts[0].trim(), deadlineDate);
             tasks.addTask(deadlineTask, ui, storage);
         } catch (DateTimeParseException e) {
-            ui.showError("OOPS!!! Princess, please enter the deadline in the correct format: yyyy-MM-dd HHmm "
-                    + "(e.g., 2025-01-31 1500).");
+            ui.showError("OOPS!!! Princess, please enter the deadline in the correct format:\n"
+                    + "Format: yyyy-MM-dd HHmm (e.g., 2025-02-28 2359)");
         }
     }
-
     /**
      * Handles creation of an Event task.
      */
     private static void handleEvent(TaskList tasks, String details, Ui ui, Storage storage) throws PookieException {
-        String[] parts = details.split(" /from | /to ");
-        if (parts[0].trim().isEmpty()) {
-            throw new PookieException.EmptyDescriptionException("Princess, "
-                    + "the description of an event cannot be empty.");
+        if (details.isEmpty()) {
+            throw new PookieException.EmptyDescriptionException("Princess, the description of "
+                    + "an event cannot be empty.");
         }
+
+        String[] parts = details.split(" /from | /to ");
         if (parts.length < 3 || parts[1].trim().isEmpty() || parts[2].trim().isEmpty()) {
-            throw new PookieException.MissingKeywordException("Princess, an event must have /from and /to times.");
+            throw new PookieException.MissingKeywordException("Princess, an event must have both /from and /to times.");
         }
 
         try {
-            LocalDateTime startDate = LocalDateTime.parse(parts[1].trim(),
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
-            LocalDateTime endDate = LocalDateTime.parse(parts[2].trim(),
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+            // Validate date format
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+            LocalDateTime startDate = LocalDateTime.parse(parts[1].trim(), formatter);
+            LocalDateTime endDate = LocalDateTime.parse(parts[2].trim(), formatter);
+
+            if (endDate.isBefore(startDate)) {
+                throw new PookieException("Princess, the event's end time cannot be **before** the start time.");
+            }
+
+            // Create event task
             Event eventTask = new Event(parts[0].trim(), startDate, endDate);
             tasks.addTask(eventTask, ui, storage);
         } catch (DateTimeParseException e) {
-            ui.showError("⚠️ OOPS!!! Princess, please enter event times in the correct format: "
-                    + "yyyy-MM-dd HHmm (e.g., 2025-02-01 1800).");
+            ui.showError("OOPS!!! Princess, please enter event times in the correct format:\n"
+                    + "Format: yyyy-MM-dd HHmm (e.g., 2025-02-28 1400 /to 2025-02-28 1600)");
         }
     }
 
