@@ -83,22 +83,15 @@ Pookie will generate a new, empty task list. If you need to recover tasks, resto
 Q: Can I edit the task file manually?
 Yes, but be careful. Any incorrect formatting may result in unexpected issuess.
 
-Command Summary
-Action	Command Format
-Add ToDo	todo TASK_DESCRIPTION
-
-Add Deadline	deadline TASK_DESCRIPTION /by YYYY-MM-DD HHmm
-
-Add Event	event TASK_DESCRIPTION /from YYYY-MM-DD HHmm /to YYYY-MM-DD HHmm
-
-List Tasks	list
-
-Mark Task Done	mark TASK_INDEX
-
-Unmark Task	unmark TASK_INDEX
-
-Find Task	find KEYWORD
-
-Delete Task	delete TASK_INDEX
-
-Exit App	bye
+|             Command Summary             |
+|_________________________________________|
+| Action	Command |        Format         |
+|    Add ToDo     | todo TASK_DESCRIPTION |
+|   Add Deadline	| deadline TASK_DESCRIPTION /by YYYY-MM-DD HHmm |
+| Add Event	| event TASK_DESCRIPTION /from YYYY-MM-DD HHmm /to YYYY-MM-DD HHmm|
+| List Tasks	|             list            |
+| Mark Task Done	|      mark TASK_INDEX    |
+| Unmark Task	|        unmark TASK_INDEX    |
+| Find Task	 |          find KEYWORD        |
+| Delete Task	|      delete TASK_INDEX      |
+| Exit App	|             bye               |
